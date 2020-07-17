@@ -1,4 +1,14 @@
 # Python-Database
-Here is a small scale example of my database. Please feel free to explore and share some suggestion to improved it! More to come in near future!
+This is a small scale database totally written in Python. It's still under development. Newer version will be rolling out soon.</br>
+I am Malay Bhavsar. This Offline database!</br>
 
-Here I present you my database created with help of python. This is not yet secure! must not use in developing purpose yet. Some times the terminal crashes! Will be fixed in the near future.
+# Functions & Syntax
+Some of the functions and their usage is mentioned below!
+<b> #> create table_name : col_name_1 col_name_2 col_name_n </b>
+Above Sysntax is used for creating a table!
+
+<b> #> help </b>
+Above Sysntax is used for getting help!
+
+<b> #> insert table_name : col_val_1 col_val_2 col_val_n </b>
+Above Sysntax is used for Inserting new entry.But if you want to keep a field empty then place 0!
