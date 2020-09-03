@@ -5,6 +5,7 @@
 # Importing the modules.
 import os
 database_path = "./.leo_storage"
+version = '2.0'
 
 
 def clear():
@@ -17,17 +18,22 @@ def base_dir():
         return 0
     else:
         os.mkdir(f'{database_path}')
+        list_file = open(f"{database_path}/leodb_list.mdt", "w")
+        list_file.close()
 
 
 def get_num_record(file_name):
-    file_open = open(f"{database_path}/{file_name}", "r")
-    file_data = file_open.read()
-    list_data = []
-    list_data = file_data.split("#END$")
-    if '\n' in list_data:
-        list_data.remove("\n")
-    file_open.close()
-    return len(list_data) - 1
+    if os.path.exists(f"{database_path}/{file_name}"):
+        file_open = open(f"{database_path}/{file_name}", "r")
+        file_data = file_open.read()
+        list_data = []
+        list_data = file_data.split("#END$")
+        if '\n' in list_data:
+            list_data.remove("\n")
+        file_open.close()
+        return len(list_data) - 1
+    else:
+        return -1
 
 
 def create_table(table_name, col_list):
@@ -45,10 +51,23 @@ def create_table(table_name, col_list):
             f"[SUCCESS] : Table Created! Number of columns: {len(col_list)}")
         file_ls.write(new_str)
         file_ls.close()
-        db_file = open(f"{database_path}/{table_name}.leodb", "a")
+        db_file = open(f"{database_path}/{table_name}.leodb", "w")
         db_file.close()
         # Making entry of new tale created in list_table
         insert_list_table(table_name)
+
+
+def delete_table(table_name):
+    table_path = f"{database_path}/{table_name}.leodb"
+    table_meta = f"{database_path}/{table_name}.mdt"
+    count = 0
+    if os.path.exists(table_path) and os.path.exists(table_meta):
+        os.remove(table_path)
+        os.remove(table_meta)
+        print("[SUCCESS] : Table Deleted Successfully!")
+        delete_list_table(table_name)
+    else:
+        print("[ERROR] : Table Not Found!")
 
 
 def insert_record(table_name, dt_list):
@@ -67,8 +86,25 @@ def insert_record(table_name, dt_list):
 def insert_list_table(table_name):
     table_file = open(f"{database_path}/leodb_list.mdt", "a")
     string = ''
-    ldb_id = get_num_record("leodb_list.mdt")
-    string += f"{ldb_id}#NXT${table_name}#END$"
+    string += f"{table_name}#END$"
+    table_file.write(string)
+    table_file.close()
+
+
+def delete_list_table(table_name):
+    table_file = open(f"{database_path}/leodb_list.mdt", "r")
+    table_data = table_file.read()
+    table_file.close()
+    os.remove(f"{database_path}/leodb_list.mdt")
+    table_ls = table_data.split("#END$")
+    table_ls.pop()
+    if table_name in table_ls:
+        table_index = table_ls.index(table_name)
+        table_ls.pop(table_index)
+    table_file = open(f"{database_path}/leodb_list.mdt", "w")
+    string = ''
+    for i in range(len(table_ls)):
+        string += f"{table_ls[i]}#END$"
     table_file.write(string)
     table_file.close()
 
@@ -76,29 +112,78 @@ def insert_list_table(table_name):
 def list_table():
     table_file = open(f"{database_path}/leodb_list.mdt", "r")
     table_data = table_file.read()
-    name_ls = []
-    ls = []
-    name_ls = table_data.split("#END$")
-    for i in range(len(name_ls) - 1):
-        ls = name_ls[i].split("#NXT$")
-        table_name = f"{ls[1]}.leodb"
-        print(f"{ls[0]}\t{ls[1]}\t Records: {get_num_record(table_name)}")
     table_file.close()
+    name_ls = table_data.split("#END$")
+    if len(name_ls) - 1 == 0:
+        print("[ALERT] : Table list empty! Try creating a table.")
+    else:
+        print(f"Index\tTable_name\tRecords\n")
+        for i in range(len(name_ls) - 1):
+            table_name = f"{name_ls[i]}.leodb"
+            num_record = get_num_record(table_name)
+            print(f"{i}\t{name_ls[i]}\t\t{num_record}")
 
 
 def display_table(table_name):
     if os.path.exists(f"{database_path}/{table_name}.leodb"):
         table_file = open(f"{database_path}/{table_name}.leodb", "r")
         table_data = table_file.read()
+        table_file.close()
+        table_info_file = open(f"{database_path}/{table_name}.mdt", "r")
+        table_info = table_info_file.read()
+        table_info_file.close()
+        col_list = []
+        col_list = table_info.split(",")
+        print(f"Index\t", end='')
+        for column in col_list:
+            print(f"{column}\t", end='')
+        print("\n")
         name_ls = []
         main_ls = []
         name_ls = table_data.split("#END$")
         for i in range(len(name_ls) - 1):
             main_ls = name_ls[i].split("#NXT$")
+            print(f"{i}\t", end='')
             for j in range(len(main_ls)):
-                print(f"{main_ls[j]}\t")
+                print(f"{main_ls[j]}\t", end='')
+            print("")
+    else:
+        print("[ERROR] : No such table Exist.Try #> list to get a list of tables.")
+
+
+def search_table_record(table_name, col_name, value):
+    if os.path.exists(f"{database_path}/{table_name}.leodb"):
+        table_info_file = open(f"{database_path}/{table_name}.mdt", "r")
+        table_info = table_info_file.read()
+        table_info_file.close()
+        col_list = []
+        col_list = table_info.split(",")
+        if col_name.upper() in col_list:
+            col_index = col_list.index(col_name.upper())
+            table_file = open(f"{database_path}/{table_name}.leodb", "r")
+            table_data = table_file.read()
+            table_file.close()
+            data_ls = []
+            data_ls = table_data.split("#END$")
+            data_ls.pop()
+            count = 0
+            print(f"Index\t", end='')
+            for column in col_list:
+                print(f"{column}\t", end='')
             print("\n")
-        table_file.close()
+            for data in data_ls:
+                val_ls = []
+                val_ls = data.split("#NXT$")
+                if value in val_ls[col_index]:
+                    count += 1
+                    print(f"{data_ls.index(data)}", end='\t')
+                    for val in val_ls:
+                        print(f"{val}", end='\t')
+                    print("")
+            if count == 0:
+                print("No record with given data found")
+        else:
+            print("[ERROR] : No Such Table column exists!")
     else:
         print("[ERROR] : No such table Exist.Try #> list to get a list of tables.")
 
@@ -111,7 +196,7 @@ def terminal():
     user_arg = ''
     database = ''
     # Start up Message.
-    print("LEO-DB V1 --- Malay Bhavsar\nFor help type #> help")
+    print(f"LEO-DB Version:{version} --- Malay Bhavsar\nFor help type #> help")
     # Creating a loop for multiple operation.
     arg_ls = []
     while user_arg.lower() != 'exit':
@@ -152,6 +237,25 @@ def terminal():
                 display_table(arg_ls[1])
             else:
                 print("[ERROR] : Please Enter proper Syntax. Type #> help")
+        elif arg_ls[0].lower() == 'search':
+            if len(arg_ls) >= 4:
+                new_str = ''
+                for i in range(3, len(arg_ls)):
+                    new_str += arg_ls[i]
+                    if i != len(arg_ls) - 1:
+                        new_str += ' '
+                search_table_record(arg_ls[1], arg_ls[2], new_str)
+            else:
+                print("[ERROR] : Please Enter proper Syntax. Type #> help")
+        elif arg_ls[0].lower() == 'delete':
+            if os.path.exists(f"{database_path}/{arg_ls[1]}.leodb"):
+                confirm = input("Re-enter Table name for Confirmation: ")
+                if confirm == arg_ls[1]:
+                    delete_table(arg_ls[1])
+                else:
+                    print("[ABORT] : Table deletion aborted!")
+            else:
+                print("[ERROR] : No such table Exist.")
         elif len(user_arg) == 0:
             pass
         else:
@@ -159,15 +263,17 @@ def terminal():
 
 
 def help_me():
-    print("\nWelcome to Help Me of LEO-DB V1\n")
+    print(f"\nWelcome to Help Me of LEO-DB Version:{version}")
     print("Here are some of the commands you can go with!\n")
     print("create table_name col_1,col_2,col_3...\t-->  To create a new database.")
     print("insert table_name value_1,value_2.....\t-->  To add a new entry")
     print("list\t\t\t\t\t-->  To Display names of table.")
     print("display table_name\t\t\t-->  To Display the table records.")
+    print("delete table_name\t\t\t-->  To Delete the entire table.")
+    print("search table_name col_name value\t-->  To Display the specifictable records.")
     print("clear\t\t\t\t\t-->  To clear the terminal screen")
     print("exit\t\t\t\t\t-->  To exit the program")
-    print("More functionality will be added in te future! Stay tuned :)")
+    print("\nMore functionality will be added in te future! Stay tuned :)")
 
 
 # Starting the program CLI-UI.
