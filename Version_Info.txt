@@ -1,0 +1,13 @@
+###> LEO-DB Python by Malay Bhavsar
+
+#> Version: 1.0
+
+	- Basic functions like create, insert, list, display, clear, exit.
+
+#> Version: 2.0
+
+	- Function display output improved.
+	- Function list output improved.
+	- search & delete functions Added.
+	- create function improved.
+	- Bugs removed.
