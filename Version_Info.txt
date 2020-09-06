@@ -11,3 +11,8 @@
 	- search & delete functions Added.
 	- create function improved.
 	- Bugs removed.
+
+#> Version: 3.0
+
+	- Delete record Function added.
+	- File I/O improved.
