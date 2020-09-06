@@ -11,6 +11,8 @@ Some of the functions and their usage is mentioned below!
 <b> #> delete table_name</b>
 </br></br> Inserting a Record.</br>
 <b> #> insert table_name value_1, value_2, ..</b>
+</br></br> Delete specific records in the table.</br>
+<b> #> remove table_name col_name value</b>
 </br></br> List of all tables.</br>
 <b> #> list</b>
 </br></br> Display all the records in the table.</br>
