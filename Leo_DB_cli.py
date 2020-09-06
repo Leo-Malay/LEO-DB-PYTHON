@@ -5,10 +5,11 @@
 # Importing the modules.
 import os
 database_path = "./.leo_storage"
-version = '2.0'
+version = '3.0'
 
 
 def clear():
+    # This function helps in clearing the screen.
     os.system("cls")
 
 
@@ -23,6 +24,7 @@ def base_dir():
 
 
 def get_num_record(file_name):
+    # It returns number of records in the given file_name.
     if os.path.exists(f"{database_path}/{file_name}"):
         file_open = open(f"{database_path}/{file_name}", "r")
         file_data = file_open.read()
@@ -58,6 +60,7 @@ def create_table(table_name, col_list):
 
 
 def delete_table(table_name):
+    # Removes all files asscoiated with table_name.
     table_path = f"{database_path}/{table_name}.leodb"
     table_meta = f"{database_path}/{table_name}.mdt"
     count = 0
@@ -71,6 +74,7 @@ def delete_table(table_name):
 
 
 def insert_record(table_name, dt_list):
+    # To insert a record inside the given table.
     db_file = open(f"{database_path}/{table_name}.leodb", "a")
     string = ''
     for i in range(len(dt_list)):
@@ -84,6 +88,7 @@ def insert_record(table_name, dt_list):
 
 
 def insert_list_table(table_name):
+    # Inserts entry in the main table list.
     table_file = open(f"{database_path}/leodb_list.mdt", "a")
     string = ''
     string += f"{table_name}#END$"
@@ -92,6 +97,7 @@ def insert_list_table(table_name):
 
 
 def delete_list_table(table_name):
+    # Removes ebtry from the main table list.
     table_file = open(f"{database_path}/leodb_list.mdt", "r")
     table_data = table_file.read()
     table_file.close()
@@ -110,6 +116,7 @@ def delete_list_table(table_name):
 
 
 def list_table():
+    # Gives a list of table.
     table_file = open(f"{database_path}/leodb_list.mdt", "r")
     table_data = table_file.read()
     table_file.close()
@@ -125,6 +132,7 @@ def list_table():
 
 
 def display_table(table_name):
+    # Display the entire records of the given table name.
     if os.path.exists(f"{database_path}/{table_name}.leodb"):
         table_file = open(f"{database_path}/{table_name}.leodb", "r")
         table_data = table_file.read()
@@ -151,7 +159,8 @@ def display_table(table_name):
         print("[ERROR] : No such table Exist.Try #> list to get a list of tables.")
 
 
-def search_table_record(table_name, col_name, value):
+def search_record(table_name, col_name, value):
+    # Searchs the table for given column name with the value.
     if os.path.exists(f"{database_path}/{table_name}.leodb"):
         table_info_file = open(f"{database_path}/{table_name}.mdt", "r")
         table_info = table_info_file.read()
@@ -186,6 +195,42 @@ def search_table_record(table_name, col_name, value):
             print("[ERROR] : No Such Table column exists!")
     else:
         print("[ERROR] : No such table Exist.Try #> list to get a list of tables.")
+
+
+def delete_record(table_name, col_name, value):
+    if os.path.exists(f"{database_path}/{table_name}.leodb"):
+        table_detail_file = open(f"{database_path}/{table_name}.mdt", "r")
+        table_detail = table_detail_file.read()
+        table_detail_file.close()
+        table_detail_ls = table_detail.split(",")
+        if col_name.upper() in table_detail_ls:
+            col_index = table_detail_ls.index(col_name.upper())
+            table_data_file = open(f"{database_path}/{table_name}.leodb", "r")
+            table_data = table_data_file.read()
+            table_data_file.close()
+            table_data_ls = table_data.split("#END$")
+            table_data_ls.pop()
+            data_string = ''
+            count = 0
+            value = ''.join([str(elem) for elem in value])
+            for record in table_data_ls:
+                record_ls = record.split("#NXT$")
+                if value == record_ls[col_index]:
+                    count += 1
+                else:
+                    data_string += record + "#END$"
+            table_data_file = open(
+                f"{database_path}/{table_name}.leodb", "w")
+            table_data_file.write(data_string)
+            table_data_file.close()
+            if count != 0:
+                print(f"[SUCCESS] : {count} records deleted!")
+            else:
+                print(f"[SUCCESS : No such record found!")
+        else:
+            print("[ERROR] : No such column exist!")
+    else:
+        print("[ERROR] : No such table exist!")
 
 
 def terminal():
@@ -230,6 +275,18 @@ def terminal():
                 insert_record(arg_ls[1], dt_list)
             else:
                 print("[ERROR] : No such Table Exist!")
+        elif arg_ls[0].lower() == 'remove':
+            if os.path.exists(f"{database_path}/{arg_ls[1]}.mdt") and os.path.exists(f"{database_path}/{arg_ls[1]}.leodb"):
+                new_str = ''
+                dt_list = []
+                for i in range(3, len(arg_ls)):
+                    new_str += arg_ls[i]
+                    if i != len(arg_ls) - 1:
+                        new_str += ' '
+                dt_list = new_str.split(",")
+                delete_record(arg_ls[1], arg_ls[2], dt_list)
+            else:
+                print("[ERROR] : No such Table Exist!")
         elif arg_ls[0].lower() == 'list':
             list_table()
         elif arg_ls[0].lower() == 'display':
@@ -244,7 +301,7 @@ def terminal():
                     new_str += arg_ls[i]
                     if i != len(arg_ls) - 1:
                         new_str += ' '
-                search_table_record(arg_ls[1], arg_ls[2], new_str)
+                search_record(arg_ls[1], arg_ls[2], new_str)
             else:
                 print("[ERROR] : Please Enter proper Syntax. Type #> help")
         elif arg_ls[0].lower() == 'delete':
@@ -263,6 +320,7 @@ def terminal():
 
 
 def help_me():
+    # THis function helps the user with the syntax and this database.
     print(f"\nWelcome to Help Me of LEO-DB Version:{version}")
     print("Here are some of the commands you can go with!\n")
     print("create table_name col_1,col_2,col_3...\t-->  To create a new database.")
