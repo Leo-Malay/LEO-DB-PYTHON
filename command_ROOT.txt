@@ -1,0 +1,35 @@
+CREATE A NEW TABLE    
+    #> CREATE table_name col_name1,col_name2,...
+
+RENAME AN EXISTING TABLE    
+    #> RENAME old_table_name new_table_name
+
+DELETE AN EXISTING TABLE
+    #> DELETE table_name
+
+INSERT MULTIPLE COLUMNS IN AN EXISTING TABLE
+    #> INSERT_COL table_name col_name1,col_name2,...
+
+RENAME A COLUMN IN AN EXISTING TABLE
+    #> RENAME_COL table_name old_col_name,new_col_name
+
+DELETE MULTIPLE COLUMN 
+    #> DELETE_COL table_name col_name1,col_name2,...
+
+DISPLAY ALL THE RECORDS IN THE TABLE
+    #> DISPLAY table_name
+
+GIVES A BRIEF DESCRIPTION ABOUT THE TABLE
+    #> DEFINE_TABLE table_name
+
+GIVES STRUCTURE OF THE TABLE
+    #> DEFINE_STRUCT table_name
+
+INSERT RECORD INTO THE TABLE
+    #> INSERT_RECORD table_name value1,value2,value3..
+
+DELETE RECORD FROM TH TABLE
+    #> DELETE_RECORD table_name col_name value1,value2..
+
+SEARCH AND DISPLAY RECORD FROM THE TABLE
+    #> SEARCH_RECORD table_name col_name1,col_name2..:value1,value2..
