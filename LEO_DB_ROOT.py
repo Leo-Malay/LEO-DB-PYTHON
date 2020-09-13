@@ -484,7 +484,7 @@ def clear_screen():
 
 
 def greet_message():
-    print(f"LEO-DB --- (Malay Bhavsar) --- (VERSION: {version})")
+    print(f"LEO-DB-ROOT --- (Malay Bhavsar) --- (VERSION: {version})")
     print("Type #> help if you get lost..  :)")
 
 ###################################################################################################
