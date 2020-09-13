@@ -1,35 +1,20 @@
-# Python-Database
-This is a minimal database with basic functionality totally written in Python. It's still under development. Newer version will be rolling out soon.</br>
-I am <b>Malay Bhavsar</b>.</br>
-Check out <b>Version_Info.txt</b> for more information on the versions and it's new features.
+# LEO-DB - A Python based database software
 
-# Functions & Syntax
-Some of the functions and their usage is mentioned below!
-</br></br> Creating a new Table.</br>
-<b> #> create table_name column_name1, column_name2, ..</b>
-</br></br> Delete an existing Table.</br>
-<b> #> delete table_name</b>
-</br></br> Inserting a Record.</br>
-<b> #> insert table_name value_1, value_2, ..</b>
-</br></br> Delete specific records in the table.</br>
-<b> #> remove table_name col_name value</b>
-</br></br> List of all tables.</br>
-<b> #> list</b>
-</br></br> Display all the records in the table.</br>
-<b> #> display table_name</b>
-</br></br> Display specific records in the table.</br>
-<b> #> search table_name col_name value</b>
-</br></br> Getting Help!</br>
-<b> #> help</b>
-</br></br> Clearing Screen.</br>
-<b> #> clear</b>
-</br></br> Exit with good bye!</br>
-<b> #> exit</b>
-</br>
-# Some Important Instructions
-</br>
-1. It's not secure yet to use! Future editions will have secure system.</br>
-2. It creates ".leostorage" file for storing the data.</br>
-3. It is totally offilne.</br>
-4. While testing no error was found, if found please mail me!</br>
-5. Python3 must be installed.</br>
+-> Hello, I am Malay Bhavsar. I have developed a database software entirely written in pure Python.<br/><br/>
+-> It all started back on 7th September 2020, when I started learning about database. I didn't quiet undestood it. So I came up with a solution that why don't I make a database software of my own! Which can help me understand and learn together.<br/><br/>
+-> It's previous versions had only basic functionalities and was not at all efficient.<br/><br/>
+
+# ROOT - The base of everything
+<br/>
+-> We all know that if you have strong roots, then you stand strong! Thus here it is LEO-DB-ROOT<br/><br/>
+-> LEO-DB-ROOT is a commandline database software in which the tasks will be performed using commands!<br/><br/>
+-> All the Commands are listed in command_ROOT.txt file.<br/><br/>
+<b>-> Features:</b><br/><br/>
+            :> Supports CSV files. (IMPORT & EXPORT command)<br/>
+            :> All tasks have been divided in to small functions.<br/>
+            :> It is Fast and Reliable.<br/>
+            :> It is Portable i.e. It's standalone software (No Installation required!)(Latest Python requred to be installed)<br/>
+            :> It is Consumes less space!<br/><br/>
+<b>-> Drawbacks:</b><br/>
+            :> Not safe yet to be used commercially.<br/>
+            :> Commands have to entered one by one.<br/>
